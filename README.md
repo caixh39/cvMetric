@@ -10,4 +10,5 @@ Welcome to any contributions!
 - [x] clfMetric 
 - [x] segMetric
 - [ ] detMetric
+- [ ] unitTest
 

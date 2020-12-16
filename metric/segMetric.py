@@ -1,4 +1,17 @@
-# -*- coding: utf-8 -*-
+# Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 import numpy as np 
 
 # gt\pred      P     N 
@@ -97,8 +110,8 @@ class SegMetric(object):
         imgPred = imgPred.astype(self.dtype)
         imgTrue = imgTrue.astype(self.dtype)
         mask = (imgTrue >= 0) & (imgTrue < self.k)
-        label = self.k * imgTrue[mask] + imgPred[mask]
-        count = np.bincount(label, minlength=self.k**2)
+        finLabel = self.k * imgTrue[mask] + imgPred[mask]
+        count = np.bincount(finLabel, minlength=self.k**2)
         cm = count.reshape(self.k, self.k)
         return cm
 
@@ -109,16 +122,16 @@ class SegMetric(object):
         self.cm += self._get_cm(imgPred, imgTrue)
 
 
-if __name__ == '__main__':
-    k = 3
-    batch_size = 4 
-    np.random.seed(4)
-    imgPred = np.random.randint(0,k,(batch_size, 3, 3))
-    imgTrue = np.random.randint(0,k,(batch_size, 3, 3))
+# if __name__ == '__main__':
+#     k = 3
+#     batch_size = 4 
+#     np.random.seed(4)
+#     imgPred = np.random.randint(0,k,(batch_size, 3, 3))
+#     imgTrue = np.random.randint(0,k,(batch_size, 3, 3))
 
-    metric = SegMetric(k)
-    metric.update(imgPred, imgTrue)
-    acc = metric.get_pixelAccuracy()
-    mIoU = metric.get_F1score()
-    print(acc)
-    print(mIoU)
+#     metric = SegMetric(k)
+#     metric.update(imgPred, imgTrue)
+#     acc = metric.get_pixelAccuracy()
+#     mIoU = metric.get_meanIoU()
+#     print(acc)
+#     print(mIoU)
